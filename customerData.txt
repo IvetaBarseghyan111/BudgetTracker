@@ -1,0 +1,1 @@
+first_name=Iveta,last_name=Barseghyan,balance=20.5,loan=5
