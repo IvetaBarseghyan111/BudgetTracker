@@ -8,8 +8,7 @@ logging.basicConfig(filename = "logsFile",
                     format = '%(levelname)s - %(message)s - %(asctime)s ')
 
 
-# Class of person where first and last name defined in constructor and balance/active loan are private attributes defined
-# in public methods (getter and setter), also transaction list extending defined in class method
+# Class of PersonBudget with attributes, constructor, class and static methods
 class PersonBudget:
     transaction_history = [] # Creation empty list in which should be added user's transaction info
     count = 0  # Creation of count variable which will be used in transaction ID it will be increased every time,when
@@ -27,76 +26,66 @@ class PersonBudget:
         return self.__customer_active_loan
     @classmethod
     # This function adds all necessary info of user purchase. This will show user's transaction history
-    def set_transaction_list_extending(cls):
-            cls.transaction_history.extend(["\n",customer_info.customer_first_name, customer_info.customer_last_name,
-             str(customer_info.count), "Expense-", str(expense), "Balance after expense-", str(customer_info.get_balance()),
-             "Active loan-", str(active_loan)])
+    def set_transaction_list_extending(cls, customer_first_name,customer_last_name, customer_expense,
+                                       customer_balance, customer_active_loan):
+            cls.transaction_history.extend(["\n",customer_first_name,customer_last_name,str(customer_info.count),
+                                            "Expense-",customer_expense, "Balance after expense-", customer_balance,
+                                            "Active loan-", customer_active_loan])
     @classmethod
     def get_transaction_list_extending(cls):
         return cls.transaction_history
+
+    @staticmethod #Statc method for validations of first and last name
+    def user_personal_info_validation(personal_info, max_validation):
+        while True: #First and last name saving loop
+            value = (input(f"Enter your {personal_info}:  ").strip().title())
+            if not value or value.isspace():
+                print(f"{personal_info.title()} cannot be empty or just spaces. Try again.")
+                logging.warning(f"{personal_info.title()} consist of spaces or empty")
+                continue
+            elif len(value) > 30:
+                print(f"{personal_info.title()} cannot exceed {max_validation} characters.")
+                logging.warning(f"{personal_info.title()} is more then 30 chars")
+                continue
+            else:
+                print(f"{personal_info.title()} saved successfully.")
+                logging.info(f"{personal_info.title()} saved successfully.")
+                return value
+
+    @staticmethod #Statc method for validations of balance and active loan
+    def finance_info_validation(finance_data):
+        while True:
+            value = input(f"Enter your {finance_data} amount: ")
+            if value.isdigit():
+                value = float(value)
+                print(f"{finance_data} saved successfully.")
+                logging.info(f"{finance_data} saved successfully")
+                return value
+            else:
+                print(f"Invalid input. {finance_data}must be a number.")
+                logging.warning(f"Invalid input of {finance_data}")
+                continue
+
 
 #By this file appending files all content is deleted before new data adding into file
 with open("transactions.txt", "a+") as file:
     file.seek(0)
     file.truncate(0)
 
+
 while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop of how user should add first,last name,
     # balance and loan 1.From file 2.Manually inputting
     expense_adding_condition = input("Do you want to enter your balance and loan manually? Type yes or no: ").strip().lower()
     if expense_adding_condition == "yes":
-        while True: #First and last name saving loop
-            first_name =(input("Enter your first name:  ").strip().title())
-            if not first_name or first_name.isspace():
-                print("First name cannot be empty or just spaces. Try again.")
-                logging.warning("First name consist of spaces or empty")
-                continue
-            elif len(first_name) > 30:
-                print("First name cannot exceed 30 characters.")
-                logging.warning("First name length is more then 30 chars")
-                continue
-            else:
-                print("First name saved successfully.")
-                logging.info("First name saved successfully.")
-                break
-        while True:
-            last_name = input("Enter your last name: ").strip().title() #Last name saving loop
-            if not last_name or last_name.isspace():
-                print("Last name cannot be empty or just spaces. Try again.")
-                logging.warning("Last name consist of spaces or empty")
-                continue
-            elif len(last_name) > 70:
-                print("Last name cannot exceed 70 characters.")
-                logging.warning("Last name length is more then 70 chars")
-                continue
-            else:
-                print("Last name saved successfully.")
-                logging.info("Last name saved successfully.")
-                break
+        first_name = PersonBudget.user_personal_info_validation("first name", 30)#User's first
+        # name assign
+        last_name = PersonBudget.user_personal_info_validation("last name", 70)#User's last name
+        #assign
         customer_info = PersonBudget(first_name, last_name) # PersonBudget class calling with two parameters
-        while True:
-            balance = input("Enter your balance amount: ") #Balance amount save loop
-            if balance.isdigit():
-                balance = float(balance)
-                customer_info.set_balance(balance) # Balance value set to PersonBudget class using setter
-                print("Balance saved successfully.")
-                logging.info("Balance saved successfully")
-                break
-            else:
-                 print("Invalid input. Balance must be a number.")
-                 logging.warning("Invalid input of balance")
-                 continue
-        while True:
-            active_loan = input("Enter your active loan amount: ") #Active loan save loop
-            if active_loan.isdigit():
-                active_loan = float(active_loan)
-                print("Active loan was successfully saved")
-                customer_info.set_loan(active_loan) #Active loan value set to PersonBudget class using setter
-                logging.info("Active loan value was successfully saved")
-                break
-            else:
-                print("Invalid input. Loan amount must be a number..")
-                logging.warning("Invalid input of loan")
-                continue
+        balance = PersonBudget.finance_info_validation("balance") # User's balance value assign
+        customer_info.set_balance(balance) #Users balance value set to class setter method of balance
+        active_loan = PersonBudget.finance_info_validation("active loan")# User's active loan value assign
+        customer_info.set_loan(active_loan) #Users active loan value set to class setter method of active loan
         conditionCheckModule.condition_and_user_response() #After all necessary info submitting start of price
         # inputting. Logic of expense adding should work
     elif expense_adding_condition == "no": #After this line user's first/last name, balance and loan values should be
@@ -140,7 +129,11 @@ while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop 
             if customer_info.get_balance() >= expense:
                 customer_info.count += 1
                 customer_info.set_balance(customer_info.get_balance() - expense)
-                customer_info.set_transaction_list_extending()
+                customer_info.set_transaction_list_extending(customer_info.customer_first_name,
+                                                             customer_info.customer_last_name,
+                                                             str(expense),str(customer_info.get_balance()),
+                                                                              str(customer_info.get_loan()))
+
                 fileModifierModule.transaction_history_adding_into_file(customer_info.customer_first_name,
                                                                         customer_info.customer_last_name,
                                                                         customer_info.count,
@@ -158,7 +151,11 @@ while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop 
                     customer_info.set_loan(customer_info.get_loan() - (expense - customer_info.get_balance()))
                     customer_info.set_balance(0)
                     customer_info.count += 1
-                    customer_info.set_transaction_list_extending()
+                    customer_info.set_transaction_list_extending(customer_info.customer_first_name,
+                                                                 customer_info.customer_last_name,
+                                                                 str(expense), str(customer_info.get_balance()),
+                                                                 str(customer_info.get_loan()))
+
                     fileModifierModule.transaction_history_adding_into_file(customer_info.customer_first_name,
                                                                             customer_info.customer_last_name,
                                                                             customer_info.count,
