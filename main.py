@@ -104,6 +104,11 @@ while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop 
             last_name =  user_info_values[1]
             balance = float(user_info_values[2])
             active_loan = float(user_info_values[3])
+
+            customer_info = PersonBudget(first_name, last_name) #Creation of customer info object when data is from file
+            customer_info.set_balance(balance)
+            customer_info.set_loan(active_loan)
+
             conditionCheckModule.ConditionCheckClass.expense_adding_check = False
             conditionCheckModule.condition_and_user_response() ###Check
         except FileNotFoundError: # Handling of not found customer data file
