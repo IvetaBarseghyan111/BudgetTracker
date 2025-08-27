@@ -25,7 +25,7 @@ class PersonBudget:
     def get_loan(self):
         return self.__customer_active_loan
     @classmethod
-    # This function adds all necessary info of user purchase. This will show user's transaction history
+    # This function adds all necessary info of user purchase. This will show in user's transaction history
     def set_transaction_list_extending(cls, customer_first_name,customer_last_name, customer_expense,
                                        customer_balance, customer_active_loan):
             cls.transaction_history.extend(["\n",customer_first_name,customer_last_name,str(customer_info.count),
@@ -83,9 +83,9 @@ while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop 
         #assign
         customer_info = PersonBudget(first_name, last_name) # PersonBudget class calling with two parameters
         balance = PersonBudget.finance_info_validation("balance") # User's balance value assign
-        customer_info.set_balance(balance) #Users balance value set to class setter method of balance
+        customer_info.set_balance(balance) #Users balance value set via class setter method of balance
         active_loan = PersonBudget.finance_info_validation("active loan")# User's active loan value assign
-        customer_info.set_loan(active_loan) #Users active loan value set to class setter method of active loan
+        customer_info.set_loan(active_loan) #Users active loan value set via class setter method of active loan
         conditionCheckModule.condition_and_user_response() #After all necessary info submitting start of price
         # inputting. Logic of expense adding should work
     elif expense_adding_condition == "no": #After this line user's first/last name, balance and loan values should be
@@ -97,20 +97,21 @@ while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop 
             user_info_values =[]
             for pair in user_info: # For loop which split each value of user_info list and add it to new
                 # user_info_values list
-                value = pair.split('=')[1]
-                user_info_values.append(value)
+                value = pair.split('=')[1] # Value of first index in user_info list assigned to value var
+                user_info_values.append(value) #Value var is appended to new user_info_values list
             #Code below this line, extract value of specified index and assigns it to specified variables
             first_name = user_info_values[0]
             last_name =  user_info_values[1]
             balance = float(user_info_values[2])
             active_loan = float(user_info_values[3])
 
-            customer_info = PersonBudget(first_name, last_name) #Creation of customer info object when data is from file
+            customer_info = PersonBudget(first_name, last_name) #Creation of customer info object when data is from
+            # file and payment processing should be done by this data
             customer_info.set_balance(balance)
             customer_info.set_loan(active_loan)
 
             conditionCheckModule.ConditionCheckClass.expense_adding_check = False
-            conditionCheckModule.condition_and_user_response() ###Check
+            conditionCheckModule.condition_and_user_response()
         except FileNotFoundError: # Handling of not found customer data file
             print("File was not found")
             logging.warning("File of customer data reading was not found")
@@ -145,8 +146,8 @@ while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop 
                                                                         expense,
                                                                         customer_info.get_balance(),
                                                                         active_loan)
-                print(f"Payment completed successfully.") #After purchase done, increment count by 1 and add it in
-                # transaction_history list
+                print(f"Payment completed successfully.") #After purchase done,all info added to transaction_history list
+                # and into transactions.txt file
                 logging.info("Payment completed successfully")
             else:
                 user_response = (input(f"Insufficient balance. Do you want to use your loan to cover the remaining amount?"
@@ -169,7 +170,7 @@ while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop 
                     print(f"Payment completed successfully.")
                     logging.info("Payment completed successfully")
                 elif user_response == "yes" and (customer_info.get_balance() == 0 and customer_info.get_loan() == 0):
-                              #Logic of balance and active loan amount when they are 0
+                    #Logic of balance and active loan amount when they are 0
                     print(f"You have no funds left in balance or loan.")
                     logging.info("User does not have funds in balance or loan")
                     conditionCheckModule.ConditionCheckClass.expense_adding_check = False
@@ -189,7 +190,7 @@ while conditionCheckModule.ConditionCheckClass.expense_adding_check:#While loop 
         new_expense = input("Do you want to enter another expense.Please enter Yes or No ").strip().lower()
         conditionCheckModule.user_response_check_function(new_expense)
 
-    transaction_for_user = tuple(customer_info.get_transaction_list_extending())
+    transaction_for_user = tuple(customer_info.get_transaction_list_extending()) # Transaction list type changing to
+    # tuple and displaying it to the user with in user-friendly way
     print(" ".join(transaction_for_user))
-
 
