@@ -1,14 +1,25 @@
 class ConditionCheckClass:
+    user_data_adding_check = True
     condition_check = True
-    expense_adding_check = True
 
-def condition_and_user_response():
-    ConditionCheckClass.condition_check = True
-
-#By this function checks if user wants to add new expense or not
-def user_response_check_function(condition_value):
-    if condition_value == "yes":
+    @classmethod
+    def condition_and_user_response(cls):
         ConditionCheckClass.condition_check = True
-    else:
-        ConditionCheckClass.condition_check = False
-        ConditionCheckClass.expense_adding_check = False
+
+    @classmethod
+    #By this function checks if user wants to add new expense or not
+    def user_response_check_function(cls, condition_value = True):
+        while True:
+            condition_value = input("Do you want to enter another expense.Please enter Yes or No ").strip().lower()
+            if condition_value == "yes":
+                cls.condition_check = True
+                cls.user_data_adding_check = True
+                break
+            elif condition_value not in ["yes", "no"]:
+                print("Please answer with Yes or No")
+                continue
+            else:
+                cls.condition_check = False
+                cls.user_data_adding_check = False
+                break
+

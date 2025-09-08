@@ -1,9 +1,7 @@
-INFO - First name saved successfully. - 2025-08-20 21:48:33,216 
-INFO - Last name saved successfully. - 2025-08-20 21:48:34,296 
-INFO - Balance saved successfully - 2025-08-20 21:48:36,487 
-INFO - Active loan value was successfully saved - 2025-08-20 21:48:37,409 
-INFO - Payment completed successfully - 2025-08-20 21:48:39,298 
-INFO - Payment completed successfully - 2025-08-20 21:48:50,039 
-INFO - Not enough funds in active loan - 2025-08-20 21:48:59,725 
-INFO - Payment completed successfully - 2025-08-20 21:49:04,828 
-INFO - User does not have funds in balance or loan - 2025-08-20 21:49:13,182 
+INFO - First Name saved successfully. - 2025-09-08 23:19:32,868 
+INFO - Last Name saved successfully. - 2025-09-08 23:19:33,558 
+INFO - balance saved successfully - 2025-09-08 23:19:34,344 
+INFO - active loan saved successfully - 2025-09-08 23:19:35,495 
+INFO - Payment completed successfully - 2025-09-08 23:19:36,730 
+INFO - Payment completed successfully - 2025-09-08 23:19:40,914 
+INFO - User does not have funds in balance or loan - 2025-09-08 23:19:45,399 

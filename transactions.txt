@@ -1,3 +1,2 @@
-Customer ID-Iv Bars 1,Expense -4.0, Balance after expense-1.0,Active loan-4.0, 
-Customer ID-Iv Bars 2,Expense -3.0, Balance after expense-0,Active loan-2.0, 
-Customer ID-Iv Bars 3,Expense -2.0, Balance after expense-0,Active loan-0.0, 
+{'First Name': 'G', 'Last Name': 'M', 'ID': 1, 'Expense': 10.0, 'Balance After': 0.0, 'Active Loan After': 10.0} 
+{'First Name': 'G', 'Last Name': 'M', 'ID': 2, 'Expense': 10.0, 'Balance After': 0, 'Active Loan After': 0.0} 
