@@ -1,7 +1,7 @@
 import logging
 import conditionCheckModule
 import fileModifierModule
-from personBudgetClass import PersonBudget
+from personBudgetClass import OnlineBudget
 
 logging.basicConfig(filename="logsFile",
                     filemode="w",
@@ -19,11 +19,13 @@ while conditionCheckModule.ConditionCheckClass.user_data_adding_check: #While lo
     if expense_adding_condition == "manually":
         #User's firs_name, last_nae,balance, active_loan values assigning after personBudget class @staticmethod
         #validations passing
-        first_name = PersonBudget.user_personal_info_validation("first name", 30)
-        last_name = PersonBudget.user_personal_info_validation("last name", 70)
-        balance = PersonBudget.finance_info_validation("balance")
-        active_loan = PersonBudget.finance_info_validation("active loan")
-        customer_info = PersonBudget(first_name, last_name, balance, active_loan) #PersonBudget class calling with
+        first_name = OnlineBudget.user_personal_info_validation("first name", 30)
+        last_name = OnlineBudget.user_personal_info_validation("last name", 70)
+        balance = OnlineBudget.finance_info_validation("balance")
+        active_loan = OnlineBudget.finance_info_validation("active loan")
+        online_loan = OnlineBudget.finance_info_validation("online loan")
+        customer_info = OnlineBudget(first_name, last_name, balance, active_loan, online_loan) #OnlineBudget class
+        # calling with
         # two parameters
         conditionCheckModule.ConditionCheckClass.condition_and_user_response() #After all necessary info submitting
         # start of price inputting. Logic of expense adding should work
@@ -32,19 +34,17 @@ while conditionCheckModule.ConditionCheckClass.user_data_adding_check: #While lo
         # should be extracted from customerData file
 
         #Customer info assigning from file
-        first_name, last_name, balance, active_loan = fileModifierModule.customer_data_reading_and_assigning_from_file()
+        first_name, last_name, balance, active_loan, online_loan \
+            = fileModifierModule.customer_data_reading_and_assigning_from_file()
 
         # Creation of customer info object when data is from file
-        customer_info = PersonBudget(first_name, last_name, balance, active_loan)
+        customer_info = OnlineBudget(first_name, last_name, balance, active_loan, online_loan)
 
         conditionCheckModule.ConditionCheckClass.user_data_adding_check = False
         conditionCheckModule.ConditionCheckClass.condition_and_user_response()
 
     elif expense_adding_condition == "json":
-        first_name, last_name, balance, active_loan = fileModifierModule.customer_data_reading_and_assigning_from_json()
-        customer_info = PersonBudget(first_name, last_name, balance, active_loan)
-        conditionCheckModule.ConditionCheckClass.user_data_adding_check = False
-        conditionCheckModule.ConditionCheckClass.condition_and_user_response()
+        pass
 
     elif expense_adding_condition not in ["manually", "text file", "json"]:  # Logic of when user do not answer with
         # correct  option of how should be added user's info
@@ -55,7 +55,7 @@ while conditionCheckModule.ConditionCheckClass.user_data_adding_check: #While lo
     while conditionCheckModule.ConditionCheckClass.condition_check:  # Logic of expense adding
         expense = input("Enter the expense amount: ")
 
-        if customer_info.get_balance() == 0 and customer_info.get_loan() == 0:
+        if customer_info.get_balance() == 0 and customer_info.get_loan() == 0 and customer_info.get_online_loan() == 0:
             # Logic of balance and active loan amount when they are 0
             print(f"You have no funds left in balance or loan.")
             logging.info("User does not have funds in balance or loan")
@@ -77,13 +77,21 @@ while conditionCheckModule.ConditionCheckClass.user_data_adding_check: #While lo
                     if customer_info.fund_calculator(expense, True):
                         print(f"Payment completed successfully.")
                         logging.info("Payment completed successfully")
-
                     else:
-                        print(f"Not enough active loan. Your current active loan is {customer_info.get_loan()}")
-                        logging.info("Not enough funds in active loan")
-                        continue
+                        user_response = (input(f"Insufficient Active Loan. Do you want to use your online loan to "
+                                               f"cover the remaining amount?" f" (yes/no):  ").strip().lower())
+                        if user_response == "yes":
+                            if customer_info.fund_calculator(expense, True, True):
+                                print(f"Payment completed successfully.")
+                                logging.info("Payment completed successfully")
+                            else:
+                                print(f"Not enough active loan and online loan. Your current active loan is"
+                                      f" {customer_info.get_loan()}, your current online loan is"
+                                      f" {customer_info.get_online_loan()}")
+                                logging.info("Not enough funds in active loan and online loan")
+                                continue
 
-                else:# Logic of payment cancelled by user, when user type no for payment from active loan
+                else:  # Logic of payment cancelled by user, when user type no for payment from active loan
                     conditionCheckModule.ConditionCheckClass.user_data_adding_check = False
                     break
         else:
@@ -93,7 +101,6 @@ while conditionCheckModule.ConditionCheckClass.user_data_adding_check: #While lo
 
         customer_info.set_transaction_list_extending(expense)
         customer_info.transaction_history_adding_into_file(expense)
-        customer_info.transaction_history_adding_into_json(expense)
 
         conditionCheckModule.ConditionCheckClass.user_response_check_function()
 

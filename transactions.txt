@@ -1,2 +1,2 @@
-Customer ID-Gor Movsisyan 1,Expense -2.0, Balance after expense-18.0,Active loan-5.0, 
-Customer ID-Gor Movsisyan 2,Expense -3.0, Balance after expense-15.0,Active loan-5.0, 
+{'First Name': 'G', 'Last Name': 'M', 'ID': 1, 'Expense': 10.0, 'Balance After': 0.0, 'Active Loan After': 10.0} 
+{'First Name': 'G', 'Last Name': 'M', 'ID': 2, 'Expense': 10.0, 'Balance After': 0, 'Active Loan After': 0.0} 
